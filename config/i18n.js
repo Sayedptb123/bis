@@ -16,4 +16,5 @@ i18next
     }
   });
 
-module.exports = middleware;
+// Export the “handle” function itself, ready to pass directly into app.use()
+module.exports = middleware.handle(i18next);

@@ -1,32 +1,35 @@
 {
-    "name": "whatsapp-reminder-service",
-    "version": "1.0.0",
-    "description": "WhatsApp reminder service via Twilio",
-    "main": "server.js",
-    "scripts": {
-      "start": "node server.js",
-      "dev": "nodemon server.js"
-    },
-    "engines": {
-      "node": ">=16.x"
-    },
-    "dependencies": {
-      "express": "^4.18.2",
-      "mongoose": "^7.2.0",
-      "twilio": "^4.13.0",
-      "date-fns": "^2.30.0",
-      "i18next": "^22.4.7",
-      "i18next-fs-backend": "^2.1.8",
-      "i18next-http-middleware": "^3.7.4",
-      "node-cron": "^4.0.4",
-      "passport": "^0.6.0",
-      "passport-local": "^1.0.0",
-      "express-session": "^1.17.4",
-      "helmet": "^7.0.0",
-      "express-rate-limit": "^7.0.0",
-      "connect-mongo": "^5.0.0",
-      "body-parser": "^1.20.2",
-      "ejs": "^3.1.9"
-    }
+  "name": "bis",
+  "version": "1.0.0",
+  "description": "WhatsApp reminder service via Twilio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "engines": {
+    "node": ">=16.x"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^1.20.2",
+    "chrono-node": "^2.8.2",
+    "connect-mongo": "^5.0.0",
+    "date-fns": "^2.30.0",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.0.0",
+    "express-session": "^1.17.4",
+    "helmet": "^7.0.0",
+    "i18next": "^22.4.7",
+    "i18next-fs-backend": "^2.1.8",
+    "i18next-http-middleware": "^3.7.4",
+    "mongodb": "^6.17.0",
+    "mongoose": "^7.2.0",
+    "node-cron": "^4.0.4",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "twilio": "^4.13.0"
   }
-  
+}

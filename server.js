@@ -5,7 +5,7 @@ const rateLimit = require('./middleware/rateLimiter');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
-const i18n = require('./config/i18n');
+const i18nMiddleware = require('./config/i18n');
 const db = require('./config/database');
 const scheduler = require('./cron/scheduler');
 const errorHandler = require('./middleware/errorHandler');
@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(rateLimit);
 
-// i18n
-app.use(i18n.init);
+// i18n middleware (detects language, adds req.t())
+app.use(i18nMiddleware);
 
 // Sessions
 app.use(
@@ -49,7 +49,7 @@ app.use('/admin', require('./middleware/auth').ensureAdmin, require('./routes/ad
 // Error handler
 app.use(errorHandler);
 
-// Start
+// Start server & cron
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
