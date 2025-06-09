@@ -1,0 +1,22 @@
+<% layout('layout') %>
+<h1>All Reminders</h1>
+<table class="table table-striped">
+  <thead><tr><th>User</th><th>Text</th><th>Remind At</th><th>Archived</th><th>Actions</th></tr></thead>
+  <tbody>
+    <% reminders.forEach(r=>{ %>
+    <tr>
+      <td><%= r.user.email||r.user %></td>
+      <td><%= r.text %></td>
+      <td><%= r.remindAt.toLocaleString() %></td>
+      <td><%= r.archived %></td>
+      <td>
+        <% if(!r.archived){ %>
+        <form method="POST" action="/admin/reminders/<%=r.id%>/archive"><button class="btn btn-sm btn-warning">Archive</button></form>
+        <% } else { %>
+        <form method="POST" action="/admin/reminders/<%=r.id%>/restore"><button class="btn btn-sm btn-success">Restore</button></form>
+        <% } %>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
