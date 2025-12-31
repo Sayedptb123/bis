@@ -28,14 +28,14 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        mongoOptions: {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-          tls: true,
-          tlsInsecure: false,
-        }
-      }),
+      mongoUrl: process.env.MONGO_URI,
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        tls: true,
+        tlsInsecure: false,
+      }
+    }),
     cookie: { maxAge: 1000 * 60 * 60 * 24 }
   })
 );
@@ -62,4 +62,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
   scheduler.start();
+
+  // Start the worker
+  require('./workers/reminderWorker');
 });
