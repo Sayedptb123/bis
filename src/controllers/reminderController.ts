@@ -40,7 +40,27 @@ export const handleIncoming = async (req: Request, res: Response, next: NextFunc
       // parse commands e.g. "remind me tomorrow at 5pm to call mom"
       if (textBody) {
         const remindAt = parseDate(textBody);
-        await Reminder.create({ user: from, text: textBody, remindAt, lang });
+
+        let recurrenceRule;
+        let recurrenceType;
+
+        const lowerText = textBody.toLowerCase();
+        if (lowerText.includes('every day') || lowerText.includes('daily')) {
+          recurrenceRule = 'FREQ=DAILY';
+          recurrenceType = 'daily';
+        } else if (lowerText.includes('every week') || lowerText.includes('weekly')) {
+          recurrenceRule = 'FREQ=WEEKLY';
+          recurrenceType = 'weekly';
+        }
+
+        await Reminder.create({
+          user: from,
+          text: textBody,
+          remindAt,
+          lang,
+          recurrenceRule,
+          recurrenceType
+        });
       }
     }
 
@@ -65,6 +85,7 @@ export const queueDue = async () => {
     ];
 
     await reminderQueue.add('send-reminder', {
+      id: r.id,
       user: r.user,
       text: r.text,
       buttons,

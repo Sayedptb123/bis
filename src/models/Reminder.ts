@@ -11,6 +11,8 @@ export interface IReminder extends Document {
   };
   lang: 'en' | 'es' | 'hi';
   createdAt: Date;
+  recurrenceRule?: string;
+  recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'custom';
 }
 
 const ReminderSchema: Schema = new Schema({
@@ -23,7 +25,9 @@ const ReminderSchema: Schema = new Schema({
     imageUrl: String
   },
   lang: { type: String, enum: ['en', 'es', 'hi'], default: 'en' },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  recurrenceRule: { type: String },
+  recurrenceType: { type: String, enum: ['daily', 'weekly', 'monthly', 'custom'] }
 });
 
 export default mongoose.model<IReminder>('Reminder', ReminderSchema);
