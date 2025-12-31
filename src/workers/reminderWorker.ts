@@ -1,6 +1,6 @@
 import { Worker, Job } from 'bullmq';
 import IORedis from 'ioredis';
-import { sendWhatsApp } from '../utils/twilioClient';
+import { sendWhatsApp } from '../utils/metaClient';
 
 const connection = new IORedis({
     host: process.env.REDIS_HOST || 'localhost',

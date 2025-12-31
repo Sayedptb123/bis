@@ -4,17 +4,50 @@ import parseDate from '../utils/parseDate';
 import { t } from 'i18next';
 import reminderQueue from '../queues/reminderQueue';
 
+export const verifyWebhook = (req: Request, res: Response) => {
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  if (mode && token) {
+    if (mode === 'subscribe' && token === process.env.META_VERIFY_TOKEN) {
+      console.log('WEBHOOK_VERIFIED');
+      res.status(200).send(challenge);
+    } else {
+      res.sendStatus(403);
+    }
+  } else {
+    res.sendStatus(400);
+  }
+};
+
 export const handleIncoming = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const from = req.body.From.replace('whatsapp:', '');
-    const lang = req.body.ProfileName === 'Hindi' ? 'hi' : req.body.ProfileName === 'Spanish' ? 'es' : 'en';
-    const text = req.body.Body;
-    // parse commands e.g. "remind me tomorrow at 5pm to call mom"
-    const remindAt = parseDate(text);
-    const reminder = await Reminder.create({ user: req.body.From, text, remindAt, lang });
-    res.send('<Response></Response>'); // TwiML ack
+    // Check if this is a WhatsApp status update or message
+    const entry = req.body.entry?.[0];
+    const changes = entry?.changes?.[0];
+    const value = changes?.value;
+    const message = value?.messages?.[0];
+
+    if (message) {
+      const from = message.from; // e.g. "15550234002"
+      const textBody = message.text?.body || message.interactive?.button_reply?.title; // Handle text or button reply
+
+      // Simple profile name extraction if available
+      const profileName = value.contacts?.[0]?.profile?.name;
+      const lang = profileName === 'Hindi' ? 'hi' : profileName === 'Spanish' ? 'es' : 'en';
+
+      // parse commands e.g. "remind me tomorrow at 5pm to call mom"
+      if (textBody) {
+        const remindAt = parseDate(textBody);
+        await Reminder.create({ user: from, text: textBody, remindAt, lang });
+      }
+    }
+
+    res.sendStatus(200); // Meta requires 200 OK immediately
   } catch (err) {
-    next(err);
+    console.error('Webhook Error:', err);
+    res.sendStatus(200);
   }
 };
 
